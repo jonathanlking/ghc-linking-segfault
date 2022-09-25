@@ -1,0 +1,4 @@
+packages: *.cabal
+
+executable-static: True
+static: True

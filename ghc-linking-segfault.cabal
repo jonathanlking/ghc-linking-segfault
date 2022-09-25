@@ -1,0 +1,66 @@
+cabal-version:      2.4
+name:               ghc-linking-segfault
+version:            0.1.0.0
+
+library ffi
+  exposed-modules:    FFI
+  build-depends:      base >= 4 && < 5
+  hs-source-dirs:     ffi
+
+  extra-libraries:    crypto
+  ghc-options:        -Wall
+
+executable bin-no-th
+    main-is:          Main.hs
+    build-depends:    base >= 4 && < 5
+                    , template-haskell
+                    , ffi
+    hs-source-dirs:   bin-no-th
+    default-language: Haskell2010
+
+executable bin-th
+    main-is:          Main.hs
+    build-depends:    base >= 4 && < 5
+                    , template-haskell
+                    , ffi
+    hs-source-dirs:   bin-th
+    default-language: Haskell2010
+    ghc-options:        -Wall
+--                        -no-link
+
+--                        -optc-fno-stack-protector
+--                        -pgmc-supports-no-pie
+--                        -pgmlm
+--                        -optlm
+--                        -static
+--                        -fPIC
+--                        -hide-all-packages
+--                        -Wmissing-home-modules
+--                        -fexternal-dynamic-refs
+--                        -optc-U_FORTIFY_SOURCE
+--                        -optc-fstack-protector
+--                        -optc-Wall
+--                        -optc-Wunused-but-set-parameter
+--                        -optc-Wno-free-nonheap-object
+--                        -optc-fno-omit-frame-pointer
+--                        -optc-fno-canonical-system-headers
+--                        -optc-Wno-builtin-macro-redefined
+--                        -optc-D__DATE__="redacted"
+--                        -optc-D__TIMESTAMP__="redacted"
+--                        -optc-D__TIME__="redacted"
+--                        -opta-U_FORTIFY_SOURCE
+--                        -opta-fstack-protector
+--                        -opta-Wall
+--                        -opta-Wunused-but-set-parameter
+--                        -opta-Wno-free-nonheap-object
+--                        -opta-fno-omit-frame-pointer
+--                        -opta-fno-canonical-system-headers
+--                        -opta-Wno-builtin-macro-redefined
+--                        -opta-D__DATE__="redacted"
+--                        -opta-D__TIMESTAMP__="redacted"
+--                        -opta-D__TIME__="redacted"
+--                        -Wall
+--                        -v4
+--                        -optl-static
+--                        -hide-all-packages
+--                        -fno-version-macros
