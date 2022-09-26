@@ -17,15 +17,19 @@ The example is structured as follows:
 - A "no Template Haskell" binary, that just prints the result of `hexchar2int 'a'` in its `main`.
 - A "Template Haskell" binary, that evaluates `hexchar2int 'a'` at compile time.
 
-The expected behaviour is:
+We also build `libcrypto` and `libssl` and expose paths to them through environment variables.
+`$OPENSSL_STATIC_LIB` contains just the `.a` files, while `$OPENSSL_BOTH_LIB` contains `.so` files too.
 
-- Running `cabal run bin-no-th --extra-lib-dirs=$OPENSSL_LIB` will compile, run and output `10`.
-- Running `cabal run bin-th --extra-lib-dirs=$OPENSSL_LIB` will segfault during compilation.
+The observed behaviour is:
 
-**Currently there is no segfault** even though `bazel run //minimal-segfault:bin-th` in the [Bazel based example](https://github.com/jonathanlking/minirepo/tree/openssl-segfault-924) does.
-I am currently investigating if certain GHC flags, that are set by Bazel, are required.
+- Running `cabal run bin-no-th --extra-lib-dirs=$OPENSSL_STATIC_LIB` will compile, run and output `10`.
+- Running `cabal run bin-th --extra-lib-dirs=$OPENSSL_STATIC_LIB` will segfault during compilation.
 
-We can call `file $(cabal exec which bin-no-th)` to confirm that it's statically linked (the static linking is configured in the `cabal.project` file).
+This replicates the behaviour of `bazel run //minimal-segfault:bin-th` in the [Bazel based example](https://github.com/jonathanlking/minirepo/tree/openssl-segfault-924).
+
+Interestingly though, running `cabal run bin-th --extra-lib-dirs=$OPENSSL_BOTH_LIB` does **not segfault** and `libcrypto.so` is loaded (preferentially over `libcrypto.a`).
+
+We can call `file $(cabal exec which bin-no-th)` to confirm that out built executable is statically linked (the static linking is configured in the `cabal.project` file).
 
 ### Cachix
 
