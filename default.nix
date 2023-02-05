@@ -1,8 +1,8 @@
 let
   baseNixpkgs = builtins.fetchTarball {
-    name = "nixos-unstable-2022-08-09";
-    url = https://github.com/NixOS/nixpkgs/archive/9f15d6c3a74d2778c6e1af67947c95f100dc6fd2.tar.gz;
-    sha256 = "14axdmi3kb6rlib39ik42yq907bm66x6vzswm5w1rsnw9vzgm31a";
+    name = "nixos-unstable-2023-01-03";
+    url = https://github.com/NixOS/nixpkgs/archive/de8e0bfaa7e8032ea6698c5d5cc34216604fcaa3.tar.gz;
+    sha256 = "1bh1bbg6mgbvf6sd8b2gw5nqkqmrc44ga6szs0869vkal186nm6b";
   };
 
   # `static-haskell-nix` is a repository maintained by @nh2 that documents and
@@ -34,8 +34,8 @@ let
   staticHaskellPkgs =
     let
       p = import (patched-static-haskell-nix + "/survey/default.nix") {
-        compiler = "ghc924";
-        defaultCabalPackageVersionComingWithGhc = "Cabal_3_6_3_0";
+        compiler = "ghc944";
+        defaultCabalPackageVersionComingWithGhc = "Cabal_3_8_1_0";
         normalPkgs = import baseNixpkgs { overlays = []; };
       };
     in
