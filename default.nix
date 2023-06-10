@@ -1,10 +1,9 @@
 let
   baseNixpkgs = builtins.fetchTarball {
-    name = "nixos-unstable-2023-01-03";
-    url = https://github.com/NixOS/nixpkgs/archive/de8e0bfaa7e8032ea6698c5d5cc34216604fcaa3.tar.gz;
-    sha256 = "1bh1bbg6mgbvf6sd8b2gw5nqkqmrc44ga6szs0869vkal186nm6b";
+    name = "nixos-23.05";
+    url = https://github.com/NixOS/nixpkgs/archive/4ecab3273592f27479a583fb6d975d4aba3486fe.tar.gz;
+    sha256 = "10wn0l08j9lgqcw8177nh2ljrnxdrpri7bp0g7nvrsn9rkawvlbf";
   };
-
   # `static-haskell-nix` is a repository maintained by @nh2 that documents and
   # implements the litany of tricks necessary to construct a Nix-Haskell
   # toolchain capable of building fully-statically-linked binaries.
@@ -34,8 +33,8 @@ let
   staticHaskellPkgs =
     let
       p = import (patched-static-haskell-nix + "/survey/default.nix") {
-        compiler = "ghc944";
-        defaultCabalPackageVersionComingWithGhc = "Cabal_3_8_1_0";
+        compiler = "ghc962";
+        defaultCabalPackageVersionComingWithGhc = "Cabal_3_10_1_0";
         normalPkgs = import baseNixpkgs { overlays = []; };
       };
     in
@@ -76,19 +75,7 @@ let
       ghc = (superSH.ghc.override {
         # See (pic-dynamic)
         enableRelocatedStaticLibs = true;
-        enableShared = false;
       }).overrideAttrs (oldAttrs: {
-        preConfigure = ''
-          # See (pic-dynamic)
-          ${oldAttrs.preConfigure or ""}
-          echo "GhcLibHcOpts += -fPIC -fexternal-dynamic-refs" >> mk/build.mk
-          echo "GhcRtsHcOpts += -fPIC -fexternal-dynamic-refs" >> mk/build.mk
-          echo "GhcLibHcOpts += -g3" >> mk/build.mk
-          echo "GhcRtsHcOpts += -g3" >> mk/build.mk
-          echo "GhcHcOpts += -DDEBUG -debug" >> mk/build.mk
-          echo "EXTRA_HC_OPTS += -debug" >> mk/build.mk
-          echo "STRIP_CMD = :" >> mk/build.mk
-        '';
         dontStrip = true;
       });
 
